@@ -9,15 +9,14 @@ class Game
   end
 
   def play
-    until game_over? do
+    while true do
       display_gallows(@wrong_guesses)
       display_status
+      break if game_over?
       guess = get_guess
       evaluate_guess(guess)
     end
-
-    display_gallows(@wrong_guesses)
-    display_status
+    
     declare_result
   end
  
