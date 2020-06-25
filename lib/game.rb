@@ -2,23 +2,23 @@ class Game
   def initialize(word)
     @word = word
     @letters = word.split('')
-    @guessed_letters = []
+    @all_guessed_letters = []
+    @allowed_guesses = 6
     @wrong_guesses = 0
-    @letters_prompt = "_ " * @word.length
+    @revealed_letters = Array.new(@word.length) { |letter| '_' }
   end
 
   def play
-    game_over = false
-    until game_over do
+    until game_over? do
       display_gallows(@wrong_guesses)
-      # puts @word
-      puts "\n#{@letters_prompt}"
-      puts "\nYou have #{6 - @wrong_guesses} allowed incorrect guesses left."
-      puts
+      display_status
       guess = get_guess
-      check_guess(guess)
-      game_over = true
+      correct_guess?(guess) ? update_revealed_letters(guess) : @wrong_guesses += 1
     end
+
+    display_gallows(@wrong_guesses)
+    display_status
+    declare_result
   end
  
   private
@@ -34,15 +34,45 @@ class Game
     puts "===========".yellow
   end
 
+  def display_status
+    puts @word
+    puts "#{@revealed_letters.join(' ')} \tUsed letters: #{@all_guessed_letters.join()}"
+    puts "\nYou have #{@allowed_guesses - @wrong_guesses} guesses left."
+    puts
+  end
+
   def get_guess
     guess = ''
-    until guess[/[a-zA-Z]+/] && guess.length == 1 do
+    until guess[/[a-zA-Z]+/] && guess.length == 1 && !@all_guessed_letters.include?(guess) do
       print "Please enter your guess (a-z): "
-      guess = gets.chomp
+      guess = gets.downcase.chomp
     end
+    @all_guessed_letters.push(guess)
     guess.downcase
   end
 
-  def check_guess(guess)
+  def correct_guess?(guess)
+    @letters.include?(guess)
+  end
+
+  def update_revealed_letters(guess)
+    @letters.each_with_index do |letter, index|
+      @revealed_letters[index] = guess if letter == guess
+    end
+  end
+
+  def game_over?
+    if @wrong_guesses == @allowed_guesses || @revealed_letters.join() == @word
+      return true
+    end
+    false
+  end
+
+  def declare_result
+    if @revealed_letters.join == @word
+      puts "Congratulations you won!"
+    else
+      puts "Better luck next time!"
+    end
   end
 end
