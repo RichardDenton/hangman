@@ -29,7 +29,14 @@ def start_game(choice)
     game = Game.new(word_list.sample)
     game.play
   else
-    puts "Not yet implemented"
+    if File.exist?("saves/saved")
+      saved_game_file = File.open("saves/saved", "r")
+      game = Marshal::load(saved_game_file)
+      game.play
+    else
+      puts "You haven't got a saved games starting a new game instead..."
+      start_game('1')
+    end
   end
 end
 

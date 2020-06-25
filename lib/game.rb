@@ -8,6 +8,7 @@ class Game
     @revealed_letters = Array.new(@word.length) { |letter| '_' }
   end
 
+  public
   def play
     while true do
       display_gallows(@wrong_guesses)
@@ -19,7 +20,7 @@ class Game
     
     declare_result
   end
- 
+
   private
   def display_gallows(wrong_guesses)
     # Displays the gallows completed according to the number of guesses used
@@ -43,7 +44,7 @@ class Game
   def get_guess
     guess = ''
     until (guess[/[a-zA-Z]+/] && guess.length == 1 && !@all_guessed_letters.include?(guess)) || guess == '*' do
-      puts "Enter the character * to save the game"
+      puts "Enter the character * to save the game".cyan
       print "Please enter your guess (a-z): "
       guess = gets.downcase.chomp
     end
@@ -88,6 +89,10 @@ class Game
   end
 
   def save_game
-    puts "Saving"
+    serialized_game = Marshal::dump(self)
+    Dir.mkdir "saves" unless Dir.exist?("saves")
+    saved_game = File.new("saves/saved", "w")
+    saved_game.puts serialized_game
+    puts "Game saved!".red
   end
 end
