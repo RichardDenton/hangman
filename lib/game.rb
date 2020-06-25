@@ -35,7 +35,7 @@ class Game
   end
 
   def display_status
-    puts @word
+    puts
     puts "#{@revealed_letters.join(' ')} \tUsed letters: #{@all_guessed_letters.join()}"
     puts "\nYou have #{@allowed_guesses - @wrong_guesses} guesses left."
     puts
@@ -72,6 +72,7 @@ class Game
     if @revealed_letters.join == @word
       puts "Congratulations you won!"
     else
+      puts "The word was #{@word}"
       puts "Better luck next time!"
     end
   end
