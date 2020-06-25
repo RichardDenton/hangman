@@ -7,3 +7,5 @@ You get six guesses before it is game over. The game allows you to save your cur
 
 ## Reflection
 This project was created to practice manipulating files and serialization. I chose to serialize the game in the Marshal format as the information within the saved game doesn't need to be human readbale.
+
+[![Run on Repl.it](https://repl.it/badge/github/RichardDenton/hangman)](https://repl.it/github/RichardDenton/hangman)
