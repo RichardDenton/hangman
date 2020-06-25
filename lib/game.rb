@@ -91,7 +91,7 @@ class Game
   def save_game
     serialized_game = Marshal::dump(self)
     Dir.mkdir "saves" unless Dir.exist?("saves")
-    saved_game = File.new("saves/saved", "w")
+    saved_game = File.new(SAVE_FILE_PATH, "w")
     saved_game.puts serialized_game
     puts "Game saved!".red
   end

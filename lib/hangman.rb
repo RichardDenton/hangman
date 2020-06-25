@@ -2,6 +2,7 @@ require_relative 'colours'
 require_relative 'game'
 
 WORDS_FILE_NAME = '5desk.txt'
+SAVE_FILE_PATH = 'saves/saved'
 
 def display_menu
   system('clear')
@@ -25,18 +26,25 @@ end
 
 def start_game(choice)
   if choice == '1'
-    word_list = read_words(WORDS_FILE_NAME)
-    game = Game.new(word_list.sample)
-    game.play
+    game = new_game
   else
-    if File.exist?("saves/saved")
-      saved_game_file = File.open("saves/saved", "r")
-      game = Marshal::load(saved_game_file)
-      game.play
-    else
-      puts "You haven't got a saved games starting a new game instead..."
-      start_game('1')
-    end
+    game = load_game
+  end
+  game.play
+end
+
+def new_game
+  word_list = read_words(WORDS_FILE_NAME)
+  Game.new(word_list.sample)
+end
+
+def load_game
+  if File.exist?(SAVE_FILE_PATH)
+    saved_game_file = File.open(SAVE_FILE_PATH, "r")
+    return Marshal::load(saved_game_file)
+  else
+    puts "You haven't got a saved games starting a new game instead..."
+    return new_game
   end
 end
 
@@ -53,7 +61,6 @@ def read_words(words_file_name)
 
   words
 end
-
 
 display_menu
 start_game(get_choice)
