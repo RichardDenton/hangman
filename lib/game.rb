@@ -13,7 +13,7 @@ class Game
       display_gallows(@wrong_guesses)
       display_status
       guess = get_guess
-      correct_guess?(guess) ? update_revealed_letters(guess) : @wrong_guesses += 1
+      evaluate_guess(guess)
     end
 
     display_gallows(@wrong_guesses)
@@ -43,12 +43,23 @@ class Game
 
   def get_guess
     guess = ''
-    until guess[/[a-zA-Z]+/] && guess.length == 1 && !@all_guessed_letters.include?(guess) do
+    until (guess[/[a-zA-Z]+/] && guess.length == 1 && !@all_guessed_letters.include?(guess)) || guess == '*' do
+      puts "Enter the character * to save the game"
       print "Please enter your guess (a-z): "
       guess = gets.downcase.chomp
     end
-    @all_guessed_letters.push(guess)
+    @all_guessed_letters.push(guess) unless guess == '*'
     guess.downcase
+  end
+
+  def evaluate_guess(guess)
+    if guess == '*'
+      save_game
+    elsif correct_guess?(guess)
+      update_revealed_letters(guess)
+    else
+      @wrong_guesses += 1
+    end
   end
 
   def correct_guess?(guess)
@@ -75,5 +86,9 @@ class Game
       puts "The word was #{@word}"
       puts "Better luck next time!"
     end
+  end
+
+  def save_game
+    puts "Saving"
   end
 end
